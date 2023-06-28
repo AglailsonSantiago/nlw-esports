@@ -1,5 +1,6 @@
 import express from 'express'
 import { PrismaClient } from '@prisma/client'
+import { convertHoursStringToMinutes } from './utils/convert-hour-string-to-minutes'
 
 const app = express()
 const prisma = new PrismaClient()
@@ -50,14 +51,26 @@ app.get('/games/:id/ads', async(request, response) => {
 })
 
 //cadastrar anúncio
-app.post('/ads', (request, response) => {
-    return response.json([])
+app.post('/games/:id/ads', async (request, response) => {
+    const gameId = request.params.id;
+    const body = request.body;
+
+    const ad = await prisma.ad.create({
+        data: {
+            gameId,
+            name: body.name,
+            yearsPlaying: body.yearsPlaying,
+            discord: body.discord,
+            weekDays: body.weekDays.join(','),
+            hourStart: convertHoursStringToMinutes(body.hourStart),
+            hourEnd: convertHoursStringToMinutes(body.hourEnd),
+            useVoiceChannel: body.useVoiceChannel,
+        }
+    })
+
+    return response.status(201).json(ad)
 })
 
-//listar anúncios
-app.get('/ads', (request, response) => {
-    return response.json([])
-})
 
 //listar discord de determinado anúncio
 app.get('/ads/:id/discord', async (request, response) => {
