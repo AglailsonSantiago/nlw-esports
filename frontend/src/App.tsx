@@ -3,6 +3,7 @@ import logoImg from './assets/logo-nlw-esports.svg'
 import { GameBanner } from './components/GameBanner'
 import { CreateAdBanner } from './components/CreateAdBanner'
 import { useState, useEffect } from 'react'
+import * as Dialog from '@radix-ui/react-dialog'
 
 interface Game {
   id: string;
@@ -37,6 +38,7 @@ function App() {
         {games.map(game => {
           return(
             <GameBanner 
+              key={game.id}
               bannerUrl={game.bannerUrl} 
               title={game.title} 
               adsCount={game._count.ad}
@@ -46,7 +48,21 @@ function App() {
 
       </div>
 
-      <CreateAdBanner />
+      <Dialog.Root>
+        <CreateAdBanner />
+
+        <Dialog.Portal>
+          <Dialog.Overlay className='bg-black/68 inset-0 fixed'/>
+
+          <Dialog.Content className='fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+            <Dialog.Title>Publique um Anúncio</Dialog.Title>
+
+            <Dialog.Content>
+              blablablabla
+            </Dialog.Content>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
     </div>
   )
